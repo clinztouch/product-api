@@ -20,6 +20,7 @@ import { ProductService } from './product.service';
 import { CreateProductDto, UpdateProductDto, ProductFilterDto } from './dto';
 import { JwtAuthGuard } from 'src/common/guards';
 import { CurrentVendor } from 'src/common/decorators';
+import type { CurrentUser } from 'src/common/decorators';
 
 @ApiTags('Product')
 @ApiBearerAuth()
@@ -50,7 +51,7 @@ export class ProductController {
   })
   async create(
     @Body() createProductDto: CreateProductDto,
-    @CurrentVendor() vendor: any,
+    @CurrentVendor() vendor: CurrentUser,
   ) {
     return this.productService.create(vendor.vendorId, createProductDto);
   }
@@ -80,7 +81,7 @@ export class ProductController {
   })
   async getAll(
     @Query() filter: ProductFilterDto,
-    @CurrentVendor() vendor: any,
+    @CurrentVendor() vendor: CurrentUser,
   ) {
     const { products, total } = await this.productService.getAll(
       vendor.vendorId,
@@ -106,7 +107,7 @@ export class ProductController {
     status: 200,
     description: 'Product retrieved successfully',
   })
-  async getById(@Param('id') id: string, @CurrentVendor() vendor: any) {
+  async getById(@Param('id') id: string, @CurrentVendor() vendor: CurrentUser) {
     return this.productService.getById(id, vendor.vendorId);
   }
 
@@ -119,7 +120,7 @@ export class ProductController {
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
-    @CurrentVendor() vendor: any,
+    @CurrentVendor() vendor: CurrentUser,
   ) {
     return this.productService.update(id, vendor.vendorId, updateProductDto);
   }
@@ -136,7 +137,7 @@ export class ProductController {
       },
     },
   })
-  async delete(@Param('id') id: string, @CurrentVendor() vendor: any) {
+  async delete(@Param('id') id: string, @CurrentVendor() vendor: CurrentUser) {
     return this.productService.softDelete(id, vendor.vendorId);
   }
 }
